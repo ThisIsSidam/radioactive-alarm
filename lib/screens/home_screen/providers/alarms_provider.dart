@@ -20,7 +20,6 @@ class AlarmsNotifier extends ChangeNotifier {
     AlarmHandler.cancelScheduledAlarm(id);
     notifyListeners();
   }
-
 }   
 
 final alarmsProvider = ChangeNotifierProvider<AlarmsNotifier>(

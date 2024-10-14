@@ -26,6 +26,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildAlarmsList() {
     List<AlarmModel> alarms = ref.watch(alarmsProvider).alarms;
 
+    // No alarms -> show Empty Screen
+    if (alarms.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.alarm,
+              size: 120,
+            ),
+            Text(
+              'No Alarms Present'
+            )
+          ],
+        )
+      );
+    }
+
     return SingleChildScrollView(
       child: Column(
         children: [
