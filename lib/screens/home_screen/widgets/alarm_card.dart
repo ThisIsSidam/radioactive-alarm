@@ -141,14 +141,14 @@ class _AlarmCardState extends State<AlarmCard> {
             text: '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
             style: TextStyle(
               fontSize: 40,
-              fontWeight: widget.alarm.isEnable ? FontWeight.bold : FontWeight.w300,
+              fontWeight: widget.alarm.isEnabled ? FontWeight.bold : FontWeight.w300,
             ),
           ),
           TextSpan(
             text: ' ${isAm ? 'am' : 'pm'}',
             style: TextStyle(
               fontSize: 12,
-              fontWeight: widget.alarm.isEnable ? FontWeight.bold : FontWeight.w400,
+              fontWeight: widget.alarm.isEnabled ? FontWeight.bold : FontWeight.w400,
             ),
           ),
         ],
@@ -164,9 +164,9 @@ class _AlarmCardState extends State<AlarmCard> {
         ),
         const Spacer(),
         Switch(
-          value: widget.alarm.isEnable,
+          value: widget.alarm.isEnabled,
           onChanged: (val) {
-            widget.alarm.isEnable = val;
+            widget.alarm.isEnabled = val;
             setState(() {
               AlarmsDB.addAlarm(widget.alarm);
             });

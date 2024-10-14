@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:radioactive_alarm/alarm_system/alarm_hander.dart';
 import 'package:radioactive_alarm/app.dart';
 import 'package:radioactive_alarm/consts/strings.dart';
 import 'package:radioactive_alarm/models/alarm_model/alarm_model.dart';
@@ -13,5 +15,7 @@ void main() async {
   Hive.registerAdapter(TimeOfDayAdapter());
   await Hive.openBox(HiveBox.alarmsDB.name);
 
-  runApp(const MyApp());
+  await AlarmHandler.init();
+
+  runApp(const ProviderScope(child: MyApp()));
 }

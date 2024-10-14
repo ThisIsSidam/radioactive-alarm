@@ -25,8 +25,17 @@ class AlarmScreen extends StatelessWidget {
               '$hour:$minute',
               style: TextStyle(
                 fontSize: 80,
-                fontWeight: alarm.isEnable ? FontWeight.bold : FontWeight.normal,
+                fontWeight: alarm.isEnabled ? FontWeight.bold : FontWeight.normal,
               ),
+            ),
+            IconButton(
+              onPressed: () {
+                final alarm = AlarmsDB.getAlarm(alarmId);
+                alarm.isEnabled = !alarm.isEnabled;
+                AlarmsDB.addAlarm(alarm);
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.alarm_on)
             )
           ],
         )

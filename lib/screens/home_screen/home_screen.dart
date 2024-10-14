@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:radioactive_alarm/database/alarms_db.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radioactive_alarm/models/alarm_model/alarm_model.dart';
+import 'package:radioactive_alarm/screens/home_screen/providers/alarms_provider.dart';
 import 'package:radioactive_alarm/screens/home_screen/widgets/alarm_card.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +24,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAlarmsList() {
-    List<AlarmModel> alarms = AlarmsDB.getAlarms();
+    List<AlarmModel> alarms = ref.watch(alarmsProvider).alarms;
 
-    return Column(
-      children: [
-        for (final AlarmModel alarm in alarms) ...<Widget>[
-          AlarmCard(alarm: alarm),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          for (final AlarmModel alarm in alarms) ...<Widget>[
+            AlarmCard(alarm: alarm),
+          ],
+          const SizedBox(height: 64),
         ]
-      ]
+      ),
     );
   }
 
@@ -65,12 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
               } 
 
               final AlarmModel alarm = AlarmModel(
-                isEnable: true,
+                isEnabled: true,
                 time: timeOfDay,
               );
-              setState(() {
-                AlarmsDB.addAlarm(alarm);
-              });
+              ref.read(alarmsProvider).addAlarm(alarm);
             },
             child: const Icon(
               Icons.add,
