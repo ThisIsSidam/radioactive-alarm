@@ -9,13 +9,15 @@ class AlarmsNotifier extends ChangeNotifier {
   
   void addAlarm(AlarmModel alarm) {
     AlarmsDB.addAlarm(alarm);
+    alarms = AlarmsDB.getAlarms();
     AlarmHandler.scheduleAlarm(alarm);
     notifyListeners();
   }
 
-  void removeAlarm(AlarmModel alarm) {
-    // AlarmsDB.removeAlarm(alarm);
-    AlarmHandler.cancelScheduledAlarm(alarm.id);
+  void deleteAlarm(int id) {
+    AlarmsDB.deleteAlarm(id);
+    alarms = AlarmsDB.getAlarms();
+    AlarmHandler.cancelScheduledAlarm(id);
     notifyListeners();
   }
 

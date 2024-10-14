@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radioactive_alarm/database/alarms_db.dart';
 import 'package:radioactive_alarm/models/alarm_model/alarm_model.dart';
+import 'package:radioactive_alarm/screens/home_screen/providers/alarms_provider.dart';
 
-class AlarmCard extends StatefulWidget {
+class AlarmCard extends ConsumerStatefulWidget {
   final AlarmModel alarm;
 
   const AlarmCard({super.key, required this.alarm});
 
   @override
-  State<AlarmCard> createState() => _AlarmCardState();
+  ConsumerState<AlarmCard> createState() => _AlarmCardState();
 }
 
-class _AlarmCardState extends State<AlarmCard> {
-
+class _AlarmCardState extends ConsumerState<AlarmCard> {
   final ExpansionTileController _controller = ExpansionTileController();
 
   // This changes when _controller.isExpanded changes
-  // Using a separate one because we have access this even before 
-  // _controller is assigned to an expansion tile and it doesn't 
+  // Using a separate one because we have access this even before
+  // _controller is assigned to an expansion tile and it doesn't
   // take a default value.
   bool isExpanded = false;
 
@@ -37,16 +38,13 @@ class _AlarmCardState extends State<AlarmCard> {
       padding: const EdgeInsets.all(12.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(25)
-        ),
+            color: Colors.white10, borderRadius: BorderRadius.circular(25)),
         child: Column(
           children: [
             _buildLabelListTile(context),
             ExpansionTile(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-              ),
+                  borderRadius: BorderRadius.circular(25)),
               controller: _controller,
               title: _buildTimeSection(),
               subtitle: _buildSubtitle(),
@@ -56,14 +54,16 @@ class _AlarmCardState extends State<AlarmCard> {
                   isExpanded = value;
                 });
               },
-              children: const [
+              children:  [
+                const ListTile(
+                    leading: Icon(Icons.library_music),
+                    title: Text('Coming Soon')),
                 ListTile(
-                  leading: Icon(Icons.library_music),
-                  title: Text('Coming Soon')
-                ),
-                ListTile(
-                  leading: Icon(Icons.delete),
-                  title: Text('Delete'),
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete'),
+                  onTap: () {
+                    ref.read(alarmsProvider).deleteAlarm(widget.alarm.id);
+                  },
                 ),
               ],
             ),
@@ -80,48 +80,45 @@ class _AlarmCardState extends State<AlarmCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           isExpanded
-          ? Flexible(
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              minTileHeight: 18,
-              leading: isExpanded 
-              ? const Icon(Icons.label_outline)
-              : null,
-              title: isExpanded
-              ? const Text('label')
-              : const SizedBox.shrink(),
-            ),
-          )
-          : const Spacer(),
+              ? Flexible(
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    minTileHeight: 18,
+                    leading:
+                        isExpanded ? const Icon(Icons.label_outline) : null,
+                    title: isExpanded
+                        ? const Text('label')
+                        : const SizedBox.shrink(),
+                  ),
+                )
+              : const Spacer(),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: isExpanded 
-              ? const EdgeInsets.only(
-                top: 8, right: 16,
-              )
-              : const EdgeInsets.only(
-                top: 8, right: 16
-              ),
+              padding: isExpanded
+                  ? const EdgeInsets.only(
+                      top: 8,
+                      right: 16,
+                    )
+                  : const EdgeInsets.only(top: 8, right: 16),
               child: SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: IconButton.filled(
+                width: 18,
+                height: 18,
+                child: IconButton.filled(
                     padding: EdgeInsets.zero,
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.grey),
                     ),
-                    onPressed: _toggleExpansion, 
+                    onPressed: _toggleExpansion,
                     icon: Icon(
                       isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
                       size: 16,
-                    )
-                  ),
-                ),
+                    )),
+              ),
             ),
           ),
         ],
@@ -138,17 +135,20 @@ class _AlarmCardState extends State<AlarmCard> {
       text: TextSpan(
         children: [
           TextSpan(
-            text: '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
+            text:
+                '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
             style: TextStyle(
               fontSize: 40,
-              fontWeight: widget.alarm.isEnabled ? FontWeight.bold : FontWeight.w300,
+              fontWeight:
+                  widget.alarm.isEnabled ? FontWeight.bold : FontWeight.w300,
             ),
           ),
           TextSpan(
             text: ' ${isAm ? 'am' : 'pm'}',
             style: TextStyle(
               fontSize: 12,
-              fontWeight: widget.alarm.isEnabled ? FontWeight.bold : FontWeight.w400,
+              fontWeight:
+                  widget.alarm.isEnabled ? FontWeight.bold : FontWeight.w400,
             ),
           ),
         ],
@@ -159,9 +159,7 @@ class _AlarmCardState extends State<AlarmCard> {
   Widget _buildSubtitle() {
     return Row(
       children: [
-        const Text(
-          'Repeat (Coming Soon)'
-        ),
+        const Text('Repeat (Coming Soon)'),
         const Spacer(),
         Switch(
           value: widget.alarm.isEnabled,
