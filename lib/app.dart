@@ -1,6 +1,6 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:radioactive_alarm/screens/homescreen/home_screen.dart';
+import 'package:radioactive_alarm/screens/home_screen/home_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

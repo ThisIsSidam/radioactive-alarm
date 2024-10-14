@@ -17,9 +17,9 @@ class AlarmModelAdapter extends TypeAdapter<AlarmModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AlarmModel(
-      id: fields[0] as int?,
+      id: fields[0] as String?,
       title: fields[1] as String,
-      dateTime: fields[2] as DateTime,
+      time: fields[2] as TimeOfDay,
       isEnable: fields[3] as bool,
       isRadioactive: fields[4] as bool,
     );
@@ -34,7 +34,7 @@ class AlarmModelAdapter extends TypeAdapter<AlarmModel> {
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.dateTime)
+      ..write(obj.time)
       ..writeByte(3)
       ..write(obj.isEnable)
       ..writeByte(4)
